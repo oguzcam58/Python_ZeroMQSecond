@@ -1,8 +1,8 @@
 import zmq
 import json
 
-def wrongRequest(socket):
-	socket.send("Wrong request")
+wrongRequest = "Wrong request"
+wrongArguments = "Wrong arguments"
 
 context = zmq.Context()
 
@@ -23,15 +23,34 @@ while True:
 	function = request["function"]
 	if (function != None):
 		if (function == "1"):
-			args = request["args"]
-			result = int(args[0]) + int(args[1])
-			print result
-			socket.send(str(result))
-		# elif (function == 2):
-		# elif (function == 3):
-		# elif (function == 4):
-		# else:
+			try:
+				args = request["args"]
+				result = int(args[0]) + int(args[1])
+				socket.send(str(result))
+			except:
+				socket.send(wrongArguments)
+		elif (function == "2"):
+			try:
+				args = request["args"]
+				result = int(args[0]) - int(args[1])
+				socket.send(str(result))
+			except:
+				socket.send(wrongArguments)
+		elif (function == "3"):
+			try:
+				args = request["args"]
+				result = int(args[0]) * int(args[1])
+				socket.send(str(result))
+			except:
+				socket.send(wrongArguments)
+		elif (function == "4"):
+			try:
+				args = request["args"]
+				result = int(args[0]) / int(args[1])
+				socket.send(str(result))
+			except:
+				socket.send(wrongArguments)
 		else:
-			wrongRequest(socket)
+			socket.send(wrongRequest)
 	else:
-		wrongRequest(socket)
+		socket.send(wrongRequest)
