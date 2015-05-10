@@ -1,4 +1,8 @@
 import zmq
+import json
+
+def wrongRequest(socket):
+	socket.send("Wrong request")
 
 context = zmq.Context()
 
@@ -13,5 +17,21 @@ while True:
 	message = socket.recv()
 	print "Got: ", message
 
-	# Send the reply.
-	socket.send(message)
+	request = dict()
+	request = json.loads(message)
+
+	function = request["function"]
+	if (function != None):
+		if (function == "1"):
+			args = request["args"]
+			result = int(args[0]) + int(args[1])
+			print result
+			socket.send(str(result))
+		# elif (function == 2):
+		# elif (function == 3):
+		# elif (function == 4):
+		# else:
+		else:
+			wrongRequest(socket)
+	else:
+		wrongRequest(socket)
